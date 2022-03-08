@@ -1,5 +1,5 @@
 import express from "express"
-import errorValidationChecker from "../../../server/middleware/errorValidationChecker.js"
+import errorValidationChecker from "../middleware/errorValidationChecker.js"
 import User from "../models/User.js"
 import userValidation from "../validator/userValidation.js"
 import bcrypt from "bcryptjs"
