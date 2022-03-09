@@ -15,7 +15,8 @@ app.get("/", (req, res) => {
     res.send("Welcome to the auth system")
 })
 app.get("/api/user/profile", verifyToken(), (req, res) => {
-    res.send('This is the user profile')
+    console.log(req.user)
+    res.json({success: true, data: req.user})
 })
 
 app.use("/api/users", auth)
