@@ -1,18 +1,22 @@
 import { Formik } from "formik"
 import React from "react"
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from "react-native"
+import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image, Alert } from "react-native"
 import logo from "../assets/hotel.jpeg"
 import * as yup from 'yup'
+import * as authAction from "../redux/actions/authAction"
+import { useDispatch } from "react-redux"
 
 const formSchema = yup.object({
     email: yup.string().email().required(),
     password: yup.string().required().min(6)
 })
 const LoginScreen = navData => {
+    const dispatch = useDispatch()
+
     return (
-        
+
         <ScrollView
-        contentContainerStyle={styles.container}
+            contentContainerStyle={styles.container}
         >
             <Formik
                 initialValues={{
@@ -21,14 +25,22 @@ const LoginScreen = navData => {
                 }}
                 validationSchema={formSchema}
                 onSubmit={(values) => {
-                    console.log(values)
-                    navData.navigation.navigate('Dashboard')
+                    dispatch(authAction.loginUser(values))
+                        .then(result => {
+                            if (result.success) {
+                                navData.navigation.navigate('Dashboard')
+                            } else {
+                                Alert.alert(result.message)
+                            }
+
+                        })
+                        .catch(err => console.log(err))
                 }}
             >
                 {(props) => (
                     <View style={styles.container}>
                         <View style={styles.logo}>
-                            <Image style={styles.image} source={logo}/>
+                            <Image style={styles.image} source={logo} />
                         </View>
                         <View>
                             <TextInput
@@ -52,17 +64,17 @@ const LoginScreen = navData => {
                             />
                             <Text style={styles.error}>{props.touched.password && props.errors.password}</Text>
                         </View>
-                        <TouchableOpacity 
-                         onPress={props.handleSubmit}
-                        style={styles.button}>
+                        <TouchableOpacity
+                            onPress={props.handleSubmit}
+                            style={styles.button}>
                             <Text style={styles.buttonText}>Login</Text>
                         </TouchableOpacity>
                         <View style={styles.registerContainer}>
                             <Text style={styles.registerText}>Dont have an account?</Text>
-                            <TouchableOpacity 
-                            //? NAV DATA is here because props i already declared.
-                            onPress={() => navData.navigation.navigate('Register')}
-                            style={styles.registerButton}>
+                            <TouchableOpacity
+                                //? NAV DATA is here because props i already declared.
+                                onPress={() => navData.navigation.navigate('Register')}
+                                style={styles.registerButton}>
                                 <Text >Register</Text>
                             </TouchableOpacity>
                         </View>
@@ -117,11 +129,11 @@ const styles = StyleSheet.create({
     },
     registerText: {
         color: "#738289",
-        fontSize: 16,   
+        fontSize: 16,
         fontWeight: 'bold'
     },
     registerButton: {
-        fontSize: 16,   
+        fontSize: 16,
     },
     error: {
         color: "red"

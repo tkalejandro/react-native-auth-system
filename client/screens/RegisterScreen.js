@@ -1,9 +1,11 @@
 
 import React from "react"
 import { Formik } from "formik"
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from "react-native"
+import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image, Alert } from "react-native"
 import logo from "../assets/hotel.jpeg"
 import * as yup from 'yup'
+import * as authAction from "../redux/actions/authAction"
+import { useDispatch } from "react-redux"
 
 const formSchema = yup.object({
     fullName: yup.string().required().min(3),
@@ -11,6 +13,8 @@ const formSchema = yup.object({
     password: yup.string().required().min(6)
 })
 const RegisterScreen = (navData) => {
+
+    const dispatch= useDispatch()
     return (
         <ScrollView
         contentContainerStyle={styles.container}
@@ -22,9 +26,20 @@ const RegisterScreen = (navData) => {
                     password: ""
                 }}
                 validationSchema={formSchema}
-                onSubmit={(values) => {
-                    console.log(values)
-                    navData.navigation.navigate('Dashboard')
+                onSubmit={ (values) => {
+                   return(
+                    dispatch(authAction.registerUser(values))
+                    .then((result)=> {
+                        if(result.success){
+                            navData.navigation.navigate('Dashboard')
+                        } else {
+                            Alert.alert(result.message)
+                        }
+                        
+                    })
+                    .catch(err => console.log(err))
+                   )
+                    
                 }}
             >
                 {(props) => (
