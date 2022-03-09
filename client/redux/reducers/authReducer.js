@@ -21,7 +21,7 @@ const authReducer = (state = initialState, action) => {
             }
         case LOGIN_USER_FAIL: {
 
-            console.log("action", action.payload)
+            //console.log("action", action.payload)
             return {
                 ...state,
                 errors: action.payload

@@ -23,7 +23,7 @@ export const registerUser = (authData) => {
 
         const result = await fetch(`${BASE_URL}/api/users/register`, settings)
         const resultData = await result.json()
-        console.log(resultData)
+        //console.log(resultData)
         if(resultData.success) {
             dispatch({
                 type: REGISTER_USER_SUCCESS,
@@ -58,7 +58,7 @@ export const loginUser = (authData) => {
 
         const result = await fetch(`${BASE_URL}/api/users/login`, settings)
         const resultData = await result.json()
-        console.log("login",resultData)
+        //console.log("login",resultData)
         if(resultData.success) {
             dispatch({
                 type: LOGIN_USER_SUCCESS,
