@@ -1,5 +1,6 @@
 import { Formik } from "formik"
 import React from "react"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image, Alert } from "react-native"
 import logo from "../assets/hotel.jpeg"
 import * as yup from 'yup'
@@ -26,9 +27,16 @@ const LoginScreen = navData => {
                 validationSchema={formSchema}
                 onSubmit={(values) => {
                     dispatch(authAction.loginUser(values))
-                        .then(result => {
+                        .then(async result => {
                             if (result.success) {
-                                navData.navigation.navigate('Dashboard')
+                                try{
+                                    await AsyncStorage.setItem('token', result.token)
+                                    navData.navigation.navigate('Dashboard')
+                                } catch(err) {
+                                    console.log(err)
+                                    
+                                }
+                                
                             } else {
                                 Alert.alert(result.message)
                             }

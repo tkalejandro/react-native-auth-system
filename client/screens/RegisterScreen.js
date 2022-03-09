@@ -6,6 +6,7 @@ import logo from "../assets/hotel.jpeg"
 import * as yup from 'yup'
 import * as authAction from "../redux/actions/authAction"
 import { useDispatch } from "react-redux"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const formSchema = yup.object({
     fullName: yup.string().required().min(3),
@@ -29,9 +30,15 @@ const RegisterScreen = (navData) => {
                 onSubmit={ (values) => {
                    return(
                     dispatch(authAction.registerUser(values))
-                    .then((result)=> {
+                    .then(async result => {
                         if(result.success){
-                            navData.navigation.navigate('Dashboard')
+                            try {
+                                await AsyncStorage.setItem('token', result.token)
+                                navData.navigation.navigate('Dashboard')
+                            } catch(err) {
+                                console.log(err)
+                            }
+                            
                         } else {
                             Alert.alert(result.message)
                         }
