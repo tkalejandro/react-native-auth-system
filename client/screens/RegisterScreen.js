@@ -3,6 +3,13 @@ import React from "react"
 import { Formik } from "formik"
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from "react-native"
 import logo from "../assets/hotel.jpeg"
+import * as yup from 'yup'
+
+const formSchema = yup.object({
+    fullName: yup.string().required().min(3),
+    email: yup.string().email().required(),
+    password: yup.string().required().min(6)
+})
 const RegisterScreen = (navData) => {
     return (
         <ScrollView
@@ -14,6 +21,7 @@ const RegisterScreen = (navData) => {
                     email: "",
                     password: ""
                 }}
+                validationSchema={formSchema}
                 onSubmit={(values) => {
                     console.log(values)
                     navData.navigation.navigate('Dashboard')
@@ -30,16 +38,20 @@ const RegisterScreen = (navData) => {
                                 placeholder="Full Name"
                                 placeholderTextColor="#fff"
                                 onChangeText={props.handleChange('fullName')}
-                                value={props.values.email}
+                                value={props.values.fullName}
+                                onBlur={props.handleBlur('fullName')}
                             />
-                            <TextInput
+                            <Text style={styles.error}>{props.touched.fullName && props.errors.fullName}</Text>
+                             <TextInput
                                 style={styles.input}
                                 placeholder="Email"
                                 placeholderTextColor="#fff"
                                 keyboardType="email-address"
                                 onChangeText={props.handleChange('email')}
                                 value={props.values.email}
+                                onBlur={props.handleBlur('email')}
                             />
+                            <Text style={styles.error}>{props.touched.email && props.errors.email}</Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Password"
@@ -47,7 +59,9 @@ const RegisterScreen = (navData) => {
                                 secureTextEntry={true}
                                 onChangeText={props.handleChange('password')}
                                 value={props.values.password}
+                                onBlur={props.handleBlur('password')}
                             />
+                            <Text style={styles.error}>{props.touched.password && props.errors.password}</Text>
                         </View>
                         <TouchableOpacity 
                          onPress={props.handleSubmit}
@@ -118,6 +132,9 @@ const styles = StyleSheet.create({
     },
     registerButton: {
         fontSize: 16,   
+    },
+    error: {
+        color: "red"
     }
 })
 

@@ -2,6 +2,12 @@ import { Formik } from "formik"
 import React from "react"
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from "react-native"
 import logo from "../assets/hotel.jpeg"
+import * as yup from 'yup'
+
+const formSchema = yup.object({
+    email: yup.string().email().required(),
+    password: yup.string().required().min(6)
+})
 const LoginScreen = navData => {
     return (
         
@@ -13,6 +19,7 @@ const LoginScreen = navData => {
                     email: "",
                     password: ""
                 }}
+                validationSchema={formSchema}
                 onSubmit={(values) => {
                     console.log(values)
                     navData.navigation.navigate('Dashboard')
@@ -31,7 +38,9 @@ const LoginScreen = navData => {
                                 keyboardType="email-address"
                                 onChangeText={props.handleChange('email')}
                                 value={props.values.email}
+                                onBlur={props.handleBlur('email')}
                             />
+                            <Text style={styles.error}>{props.touched.email && props.errors.email}</Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Password"
@@ -39,7 +48,9 @@ const LoginScreen = navData => {
                                 secureTextEntry={true}
                                 onChangeText={props.handleChange('password')}
                                 value={props.values.password}
+                                onBlur={props.handleBlur('password')}
                             />
+                            <Text style={styles.error}>{props.touched.password && props.errors.password}</Text>
                         </View>
                         <TouchableOpacity 
                          onPress={props.handleSubmit}
@@ -111,6 +122,9 @@ const styles = StyleSheet.create({
     },
     registerButton: {
         fontSize: 16,   
+    },
+    error: {
+        color: "red"
     }
 })
 
