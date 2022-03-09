@@ -2,7 +2,7 @@ import { Formik } from "formik"
 import React from "react"
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from "react-native"
 import logo from "../assets/hotel.jpeg"
-const LoginScreen = () => {
+const LoginScreen = navData => {
     return (
         
         <ScrollView
@@ -15,6 +15,7 @@ const LoginScreen = () => {
                 }}
                 onSubmit={(values) => {
                     console.log(values)
+                    navData.navigation.navigate('Dashboard')
                 }}
             >
                 {(props) => (
@@ -47,7 +48,10 @@ const LoginScreen = () => {
                         </TouchableOpacity>
                         <View style={styles.registerContainer}>
                             <Text style={styles.registerText}>Dont have an account?</Text>
-                            <TouchableOpacity style={styles.registerButton}>
+                            <TouchableOpacity 
+                            //? NAV DATA is here because props i already declared.
+                            onPress={() => navData.navigation.navigate('Register')}
+                            style={styles.registerButton}>
                                 <Text >Register</Text>
                             </TouchableOpacity>
                         </View>
@@ -104,6 +108,9 @@ const styles = StyleSheet.create({
         color: "#738289",
         fontSize: 16,   
         fontWeight: 'bold'
+    },
+    registerButton: {
+        fontSize: 16,   
     }
 })
 
